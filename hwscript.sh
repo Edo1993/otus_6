@@ -13,24 +13,24 @@ sort \
 | sort -nr
 }
 
-top10(){
-head -10
+top5(){
+head -5
 }
 
-top_10_ip(){
-awk '{print $1}' $logpath | sorter | top10
+top_ip(){
+awk '{print $1}' $logpath | sorter | top5
 }
 
 top_request(){
-cut -d '"' -f3 $logpath | cut -d ' ' -f2 | sorter | top10
+cut -d '"' -f3 $logpath | cut -d ' ' -f2 | sorter | top5
 }
 
-url_err(){
+url_err(){ghjdthbnm 
 awk '{print $9}' $logpath | awk -F '.-' '$1 <= 599 && $1 >= 400' | sorter
 }
 
-top_10_domain(){
-awk '{print $13}' $logpath | grep http | awk 'BEGIN { FS = "/" } ; { print $3 }' | awk 'BEGIN { FS = "\"" } ; { print $1 }' | sorter | top10
+top_domain(){
+awk '{print $13}' $logpath | grep http | awk 'BEGIN { FS = "/" } ; { print $3 }' | awk 'BEGIN { FS = "\"" } ; { print $1 }' | sorter | top5
 }
 
 date_end_str(){
@@ -61,12 +61,12 @@ time_end=$(date_end_str)
 # Очистить лог
 :> $latelog
 # Начать обработку
-echo "top 10 ip adresses" >> $latelog
-echo range | top_10_ip >> $latelog
-echo "top 10 requests" >> $latelog
+echo "top ip adresses" >> $latelog
+echo range | top_ip >> $latelog
+echo "top requests" >> $latelog
 echo range | top_request >> $latelog
-echo "top 10 domains" >> $latelog
-echo range | top_10_domain >> $latelog
+echo "top domains" >> $latelog
+echo range | top_domain >> $latelog
 echo "all errors" >> $latelog
 echo range | url_err >> $latelog
 # Добавить последнюю дату в качестве первой для старта в лог
@@ -104,11 +104,11 @@ then
         fi
     else
     # Сообщение об ошибке
-    echo "last run script isn't end!"
+    echo "error"
     fi
 else
 # Сообщение о создании файла с логом
-echo "create new file log"
+echo "create new log"
 # Создать лог скрипта
 touch $latelog
 # Присвоить начальный номер, с которого ведется обработка лога nginx, строке
